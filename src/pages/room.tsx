@@ -11,7 +11,7 @@ const Room = () => {
   const { socket } = useSocket(roomId, userName);
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative" onTouchMove={(e) => e.preventDefault()}>
+    <div className="h-screen w-screen bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative" >
       <Canvas roomId={roomId} socket={socket} />
       <Toolbar />
       <Cursors />

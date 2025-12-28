@@ -11,7 +11,7 @@ export const RoomList = () => {
   const generateRoomId = () => Math.random().toString(36).substring(2, 8);
 
   const createRoom = () => {
-    const roomId = generateRoomId();
+    const roomId = 'TEST-ROOM';  // ← Everyone joins same room
     localStorage.setItem('userName', userName);
     navigate(`/room?roomId=${roomId}&userName=${encodeURIComponent(userName)}`);
   };
@@ -76,7 +76,8 @@ export const RoomList = () => {
               { id: 'design', name: 'Design Brainstorm', users: 3 },
               { id: 'math', name: 'Math Class', users: 8 },
               { id: 'code', name: 'Code Review', users: 5 },
-              { id: 'fun', name: 'Just Draw', users: 2 }
+              { id: 'fun', name: 'Just Draw', users: 2 },
+              { id: 'test', name: 'TEST ROOM', users: 999 }
             ].map((room) => (
               <button
                 key={room.id}
