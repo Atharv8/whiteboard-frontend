@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const RoomList = () => {
-  const [rooms, setRooms] = useState<{ id: string; users: number; name: string }[]>([]);
   const [newRoomName, setNewRoomName] = useState('');
   const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
   const navigate = useNavigate();

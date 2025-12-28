@@ -36,8 +36,9 @@ export const useSocket = (roomId: string, userName?: string) => {
     });
 
     // Listen for user joined/left
-    socket.on('user-joined', ({ id, name }: { id: string; name: string }) => {
-      console.log(`${name} joined`);
+    socket.on('stroke', (message) => {
+      const { userId, stroke } = message;  
+      addStroke({ ...stroke, userId });
     });
 
     socket.on('user-left', (userId: string) => {

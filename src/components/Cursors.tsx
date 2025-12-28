@@ -1,12 +1,5 @@
 import { useWhiteboardStore } from '../stores/whiteboardStore';
 
-interface Cursor {
-  x: number;
-  y: number;
-  color: string;
-  name?: string;
-}
-
 interface UserCursorProps {
   id: string;
   x: number;
