@@ -1,4 +1,3 @@
-// src/components/Cursors.tsx - FULL WORKING VERSION
 import { useWhiteboardStore } from '../stores/whiteboardStore';
 
 interface Cursor {
