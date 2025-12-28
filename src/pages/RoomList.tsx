@@ -11,7 +11,7 @@ export const RoomList = () => {
   const generateRoomId = () => Math.random().toString(36).substring(2, 8);
 
   const createRoom = () => {
-    const roomId = 'TEST-ROOM';  // ← Everyone joins same room
+    const roomId = generateRoomId();
     localStorage.setItem('userName', userName);
     navigate(`/room?roomId=${roomId}&userName=${encodeURIComponent(userName)}`);
   };
