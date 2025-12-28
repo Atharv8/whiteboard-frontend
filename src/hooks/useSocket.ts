@@ -19,8 +19,12 @@ export const useSocket = (roomId: string, userName?: string) => {
 
   // Connect to socket
   useEffect(() => {
-    const socket = io('https://whiteboard-backend.onrender.com');
-    socketRef.current = socket;
+    const socket = io(
+      import.meta.env.DEV 
+        ? 'http://localhost:3001'
+        : import.meta.env.VITE_BACKEND_URL,
+      { transports: ['websocket'] }
+    );
 
     // Join room with userName
     socket.emit('join-room', { roomId, userName });
