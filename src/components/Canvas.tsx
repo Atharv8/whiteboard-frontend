@@ -1,4 +1,4 @@
-// src/components/Canvas.tsx - FULL MOBILE + DESKTOP SUPPORT
+// src/components/Canvas.tsx - FULL MOBILE + DESKTOP SUPPORT (FIXED)
 import { useRef, useEffect, useCallback } from 'react';
 import { useWhiteboardStore } from '../stores/whiteboardStore';
 
@@ -130,6 +130,14 @@ export const Canvas = ({ roomId, socket }: CanvasProps) => {
     };
   };
 
+  // ✅ FIXED: Cancel drawing handler
+  const cancelDrawing = useCallback(() => {
+    isDrawingRef.current = false;
+    currentStrokeRef.current = null;
+    const ctx = ctxRef.current!;
+    if (ctx) ctx.beginPath();
+  }, []);
+
   // FIXED: Unified drawing handlers
   const startDrawing = useCallback((e: DrawingEvent) => {
     e.preventDefault();
@@ -147,9 +155,10 @@ export const Canvas = ({ roomId, socket }: CanvasProps) => {
     ctx.moveTo(coordinates.x, coordinates.y);
   }, [selectedColor, selectedWidth]);
 
+  // ✅ FIXED: draw with dependencies + early exit
   const draw = useCallback((e: DrawingEvent) => {
     e.preventDefault();
-    if (!isDrawingRef.current || !currentStrokeRef.current) return;
+    if (!isDrawingRef.current || !currentStrokeRef.current) return; // EARLY EXIT
     
     const coordinates = getCoordinates(e);
     currentStrokeRef.current.points.push(coordinates);
@@ -157,8 +166,9 @@ export const Canvas = ({ roomId, socket }: CanvasProps) => {
     const ctx = ctxRef.current!;
     ctx.lineTo(coordinates.x, coordinates.y);
     ctx.stroke();
-  }, []);
+  }, [selectedColor, selectedWidth]); // ✅ FIXED deps
 
+  // ✅ FIXED: stopDrawing with FORCE reset
   const stopDrawing = useCallback(() => {
     if (!isDrawingRef.current || !currentStrokeRef.current) return;
     
@@ -173,8 +183,11 @@ export const Canvas = ({ roomId, socket }: CanvasProps) => {
     addStroke(stroke);
     socket.emit('stroke', { roomId, stroke });
     
+    // FORCE RESET
     isDrawingRef.current = false;
     currentStrokeRef.current = null;
+    const ctx = ctxRef.current!;
+    if (ctx) ctx.beginPath();
   }, [selectedColor, selectedWidth, socket, roomId, addStroke]);
 
   return (
@@ -184,11 +197,16 @@ export const Canvas = ({ roomId, socket }: CanvasProps) => {
       onPointerDown={startDrawing}
       onPointerMove={draw}
       onPointerUp={stopDrawing}
+      onPointerCancel={cancelDrawing}
       onPointerLeave={stopDrawing}
       onTouchStart={startDrawing}
       onTouchMove={draw}
       onTouchEnd={stopDrawing}
-      style={{ touchAction: 'none' }}  // Prevent mobile scroll
+      onTouchCancel={cancelDrawing}
+      style={{ 
+        touchAction: 'none',
+        cursor: 'crosshair'
+      }}
     />
   );
 };
