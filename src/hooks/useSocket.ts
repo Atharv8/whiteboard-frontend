@@ -22,9 +22,11 @@ export const useSocket = (roomId: string, userName?: string) => {
     const socket = io(
       import.meta.env.DEV 
         ? 'http://localhost:3001'
-        : import.meta.env.VITE_BACKEND_URL,
-      { transports: ['websocket'] }
+        : 'https://whiteboard-backend-ngem.onrender.com',
+      { transports: ['websocket','polling'] }
     );
+
+    socketRef.current = socket;
 
     // Join room with userName
     socket.emit('join-room', { roomId, userName });
@@ -38,7 +40,6 @@ export const useSocket = (roomId: string, userName?: string) => {
     socket.on('cursor-move', ({ userId, x, y, name }: { userId: string; x: number; y: number; name?: string }) => {
       updateCursor(userId, { x, y, color: getUserColor(userId), name });
     });
-
 
     socket.on('user-left', (userId: string) => {
       updateCursor(userId, { x: 0, y: 0, color: '', name: '' });
@@ -66,7 +67,7 @@ export const useSocket = (roomId: string, userName?: string) => {
   useEffect(() => {
     const interval = setInterval(() => {
       const socket = socketRef.current;
-      if (socket) {
+      if (socket && socket.connected) {
         socket.emit('cursor-move', { 
           roomId, 
           x: mousePos.x, 

@@ -76,8 +76,7 @@ export const RoomList = () => {
               { id: 'design', name: 'Design Brainstorm', users: 3 },
               { id: 'math', name: 'Math Class', users: 8 },
               { id: 'code', name: 'Code Review', users: 5 },
-              { id: 'fun', name: 'Just Draw', users: 2 },
-              { id: 'test', name: 'TEST ROOM', users: 999 }
+              { id: 'fun', name: 'Just Draw', users: 2 }
             ].map((room) => (
               <button
                 key={room.id}
