@@ -35,11 +35,6 @@ export const useSocket = (roomId: string, userName?: string) => {
       updateCursor(userId, { x, y, color: getUserColor(userId), name });
     });
 
-    // Listen for user joined/left
-    socket.on('stroke', (message) => {
-      const { userId, stroke } = message;  
-      addStroke({ ...stroke, userId });
-    });
 
     socket.on('user-left', (userId: string) => {
       updateCursor(userId, { x: 0, y: 0, color: '', name: '' });
